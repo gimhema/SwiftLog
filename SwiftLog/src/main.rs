@@ -27,18 +27,18 @@ fn main() -> io::Result<()> {
 
     loop {
         // UDP 단발 수신
-// UDP 단발 수신
-udp.recv_once(|datagram| {
-    parser::parse_and_write(datagram, |line| writer.write_line(line));
-    Ok(()) // <-- 추가
-});
+        // UDP 단발 수신
+        udp.recv_once(|datagram| {
+            parser::parse_and_write(datagram, |line| writer.write_line(line));
+            Ok(()) // <-- 추가
+        });
 
-// TCP accept & 읽기
-tcp.accept_once();
-tcp.poll_once(|batch| {
-    parser::parse_and_write(batch, |line| writer.write_line(line));
-    Ok(()) // <-- 추가
-});
+        // TCP accept & 읽기
+        tcp.accept_once();
+        tcp.poll_once(|batch| {
+            parser::parse_and_write(batch, |line| writer.write_line(line));
+            Ok(()) // <-- 추가
+        });
 
 
         // 주기적 하우스키핑
