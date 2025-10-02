@@ -3,6 +3,7 @@ mod parser;
 mod writer;
 mod udp;
 mod tcp;
+mod console;
 
 use crate::proto::{UDP_BUF_SIZE};
 use crate::writer::LogWriter;
