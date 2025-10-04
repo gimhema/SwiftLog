@@ -4,7 +4,8 @@
 
 pub enum ConsoleCommand
 {
-    Start,
-    Stop,
-    Status,
+    Home,
+    Help,
+    ShowLogList,
+    SelectLog,
 }
