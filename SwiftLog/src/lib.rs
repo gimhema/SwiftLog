@@ -2,7 +2,7 @@
 use std::io::{self, Write};
 use std::net::{UdpSocket, TcpStream, SocketAddr};
 use std::time::{SystemTime, UNIX_EPOCH};
-use std::mem;
+
 
 pub const MAGIC: u32 = 0x31474C53; // 'SLG1' LE
 pub const VERSION: u16 = 1;

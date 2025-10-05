@@ -6,16 +6,29 @@ mod tcp;
 mod console;
 mod console_command;
 
+mod log_domain;
+mod log_store;
+mod console_select;
+
 use crate::proto::{UDP_BUF_SIZE};
 use crate::writer::LogWriter;
 use crate::udp::UdpRx;
 use crate::tcp::TcpRx;
 
+
+use std::sync::Arc;
+use crate::log_store::LogStore;
+use crate::console_select::ConsoleSelect;
+
 use std::io;
 use std::time::{Duration, SystemTime};
 
 fn main() -> io::Result<()> {
-    // 설정(필요시 env/CLI로 확장)
+
+
+    let store = Arc::new(LogStore::with_capacity(200_000, 8)); // 총 20만 건, 8샤드
+    let mut console_select = ConsoleSelect::new(store.clone());
+
     let udp_bind = "127.0.0.1:9501";
     let tcp_bind = "127.0.0.1:9502";
 

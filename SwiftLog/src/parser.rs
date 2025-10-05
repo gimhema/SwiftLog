@@ -2,6 +2,12 @@ use crate::proto::{MAGIC, VERSION};
 use std::convert::TryInto;
 use std::io;
 
+use std::sync::Arc;
+use crate::log_store::LogStore;
+
+use crate::log_domain::{Log, LogLevel};
+
+
 // 배치 바이트 → 각 로그 라인을 TSV로 만들어 writer에 전달
 pub fn parse_and_write(batch: &[u8], mut sink: impl FnMut(&[u8]) -> io::Result<()>) {
     if batch.len() < 8 { return; }
@@ -32,4 +38,18 @@ pub fn parse_and_write(batch: &[u8], mut sink: impl FnMut(&[u8]) -> io::Result<(
         // sink에 쓰기(파일 등)
         let _ = sink(&line);
     }
+}
+
+fn on_parsed_entry(
+    ts_ms: u64, level_u8: u8, 
+    code: u16, msg_bytes: &[u8],
+     store: &Arc<LogStore>) {
+    let level = match level_u8 {
+        0 => LogLevel::Trace, 1 => LogLevel::Debug, 2 => LogLevel::Info,
+        3 => LogLevel::Warn, _ => LogLevel::Error,
+    };
+    let msg = String::from_utf8_lossy(msg_bytes).into_owned();
+    let log = Log::new_unassigned(ts_ms, level, code, msg);
+    let _ = log.validate(); // 실패시 드롭/카운터 증가 등 정책은 선택
+    store.append(log);
 }
