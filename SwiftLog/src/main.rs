@@ -16,6 +16,7 @@ mod console_command;    // 기존
 mod log_domain;         // 새 모듈
 mod log_store;          // 새 모듈
 mod console_select;     // 새 모듈
+mod console_degsign;
 
 use crate::proto::UDP_BUF_SIZE;
 use crate::writer::LogWriter;
@@ -24,11 +25,14 @@ use crate::tcp::TcpRx;
 
 use crate::log_store::LogStore;
 use crate::console_select::ConsoleSelect;
+use crate::console_degsign::render_home;
 
 fn main() -> io::Result<()> {
     // 인메모리 로그 저장소 & 콘솔 셀렉터
     let store = Arc::new(LogStore::with_capacity(200_000, 8)); // 총 20만 건, 8 샤드
     let console_select = Arc::new(ConsoleSelect::new(store.clone()));
+
+    render_home("SwiftLog", env!("CARGO_PKG_VERSION"), store.len(), true);
 
     // 콘솔 입력용 채널 & 스레드
     let (tx_cmd, rx_cmd) = mpsc::channel::<String>();
@@ -133,23 +137,29 @@ fn dispatch_console_command(cmd_line: &str, console: &Arc<ConsoleSelect>) {
         return;
     }
 
-    if lower == "clear" || lower == "clearscreen" {
-        // 간단한 터미널 클리어
-        print!("\x1B[2J\x1B[1;1H");
+    if lower == "clear" || lower == "clearscreen" || lower == "cls" {
+        render_home("SwiftLog", env!("CARGO_PKG_VERSION"), console.store_len(), false);
+        return;
+    }
+
+
+    if lower == "home" {
+        render_home("SwiftLog", env!("CARGO_PKG_VERSION"), console.store_len(), false);
         return;
     }
 
     if lower == "help" || lower == "h" {
-        println!(
-            "Commands:\n\
-             - ShowLogList\n\
-             - SelectLog <query>\n\
-             - BackupLog <path> [\"query\"]\n\
-             - ClearScreen\n\
-             - Help"
-        );
-        return;
-    }
+         println!(
+             "Commands:\n\
+              - ShowLogList\n\
+              - SelectLog <query>\n\
+              - BackupLog <path> [\"query\"]\n\
+             - ClearScreen (clear/cls)\n\
+             - Home\n\
+              - Help"
+         );
+         return;
+     }
 
     // 알 수 없는 명령
     eprintln!("Unknown command: {cmd_line}");

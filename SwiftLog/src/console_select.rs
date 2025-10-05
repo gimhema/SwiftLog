@@ -9,6 +9,8 @@ pub struct ConsoleSelect { store: Arc<LogStore> }
 impl ConsoleSelect {
     pub fn new(store: Arc<LogStore>) -> Self { Self { store } }
 
+    pub fn store_len(&self) -> usize { self.store.len() } 
+
     pub fn handle_show_list(&self) {
         let q = SelectQuery { latest: true, limit: Some(50), ..Default::default() };
         self.print(&q);
