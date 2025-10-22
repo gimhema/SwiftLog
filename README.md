@@ -1,3 +1,3 @@
 # SwiftLog
 
-![MainView](MainView.png)
+![MainView](SwiftLog/MainView.png)
