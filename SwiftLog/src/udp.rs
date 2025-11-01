@@ -1,4 +1,3 @@
-use crate::parser::parse_and_write;
 use std::io;
 use std::net::UdpSocket;
 

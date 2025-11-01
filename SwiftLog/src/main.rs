@@ -17,12 +17,14 @@ mod log_domain;         // 새 모듈
 mod log_store;          // 새 모듈
 mod console_select;     // 새 모듈
 mod console_degsign;
+mod backup_quota;      // 새 모듈
 
 use crate::proto::UDP_BUF_SIZE;
 use crate::writer::LogWriter;
 use crate::udp::UdpRx;
 use crate::tcp::TcpRx;
 
+use crate::log_store::SelectQuery;
 use crate::log_store::LogStore;
 use crate::console_select::ConsoleSelect;
 use crate::console_degsign::render_home;
@@ -133,7 +135,14 @@ fn dispatch_console_command(cmd_line: &str, console: &Arc<ConsoleSelect>) {
         let mut parts = rest.splitn(2, char::is_whitespace);
         let path = parts.next().unwrap_or("").trim();
         let args = parts.next().map(str::trim).filter(|s| !s.is_empty());
-        console.handle_backup(path, args);
+        
+
+        let args_str = args.unwrap_or("");           // Option<&str> → &str
+        if let Err(e) = console.handle_backup(path, args_str) {
+            eprintln!("Backup failed: {e}");
+        }
+
+
         return;
     }
 

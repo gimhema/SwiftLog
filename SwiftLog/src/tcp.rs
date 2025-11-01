@@ -1,8 +1,6 @@
-use crate::parser::parse_and_write;
 use std::collections::VecDeque;
 use std::io::{self, Read};
 use std::net::{TcpListener, TcpStream};
-use std::time::Duration;
 
 pub struct Conn {
     stream: TcpStream,

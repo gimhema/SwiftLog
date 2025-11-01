@@ -7,3 +7,6 @@ pub const MAX_FILE_BYTES: u64 = 64 * 1024 * 1024;
 
 // UDP 패킷 최대 수신 크기
 pub const UDP_BUF_SIZE: usize = 2048;
+
+pub const BACKUP_MAX_DIR_BYTES: u64 = 5 * 1024 * 1024 * 1024; // 5 GiB
+pub const BACKUP_MIN_FS_FREE_BYTES: u64 = 512 * 1024 * 1024;   // 512 MiB 
