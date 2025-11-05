@@ -18,6 +18,7 @@ mod log_store;          // 새 모듈
 mod console_select;     // 새 모듈
 mod console_degsign;
 mod backup_quota;       // 새 모듈
+mod logger;
 
 use crate::proto::UDP_BUF_SIZE;
 use crate::writer::LogWriter;
@@ -39,6 +40,7 @@ use crate::console_degsign::render_home;
 const AUTO_BACKUP_ENABLED: bool = true;
 const AUTO_BACKUP_INTERVAL_SECS: u64 = 60;
 const AUTO_BACKUP_QUERY_STR: &str = "latest limit=10000";
+
 
 fn main() -> io::Result<()> {
     // 인메모리 로그 저장소 & 콘솔 셀렉터
@@ -67,7 +69,7 @@ fn main() -> io::Result<()> {
     }
 
     // 네트워크 바인딩
-    let udp_bind = "127.0.0.1:9501";
+    let udp_bind = "127.0.0.1:9050";
     let tcp_bind = "127.0.0.1:9502";
 
     let mut writer = LogWriter::open("logs", "app")?;
