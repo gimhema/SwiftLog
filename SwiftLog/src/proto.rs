@@ -1,6 +1,6 @@
 // 공통 상수/유틸
-pub const MAGIC: u32 = 0x3147_4C53; // 'SLG1' (LE)
-pub const VERSION: u16 = 1;
+pub const MAGIC: u32 = 0x12345678; // 'SLG1' (LE)
+pub const VERSION: u32 = 1;
 
 // 파일 롤링 사이즈(필요시 환경변수/CLI로 확장 가능)
 pub const MAX_FILE_BYTES: u64 = 64 * 1024 * 1024;
